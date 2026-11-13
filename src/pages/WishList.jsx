@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { HiXMark } from "react-icons/hi2";
 import { motion, AnimatePresence } from "motion/react";
+import { FaPlus } from "react-icons/fa";
+
 
 
 
@@ -128,7 +130,14 @@ try {
   };
 
   return (
+    
     <div className="min-h-screen bg-gradient-to-r md:p-8">
+
+      <div className='fixed right-0 bottom-0 z-50 m-6 sm:hidden'>
+        <button className='flex items-center justify-center bg-blue-400 rounded-full text-white w-[50px] h-[50px] text-3xl sticky' onClick={() => setIsOpen(true)}>
+          <FaPlus />
+        </button>
+      </div>
 
       {/* Kontener całej aplikacji */}
       <div className="mx-auto max-w-7xl pt-[40px] lg:pt-[20px] lg:rounded-[30px] lg:mt-[10px] md:mt-0 p-0 md:p-6 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
@@ -146,134 +155,136 @@ try {
       <button className='hidden md:flex justify-center items-center bg-blue-400 w-[200px] text-white h-[50px] rounded-2xl text-[20px] mb-[20px] text-center hover:bg-blue-300 transition-colors duration-300' onClick={() => setIsOpen(true)}>
         Dodaj do listy
       </button>
+      
+      
 
       {/* Ukryty / widoczny div */}
 
-<AnimatePresence>
-  {isOpen && (
-    <motion.div
-      key="modal"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-      onClick={() => setIsOpen(false)}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 50, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 30, scale: 0.95 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl"
-      >
-        <button
-          type="button"
-          onClick={() => setIsOpen(false)}
-          className="mb-2 ml-auto block"
-        >
-          <HiXMark className="text-gray-100 text-[40px] hover:text-red-400 transition-colors" />
-        </button>
-
-        <form
-          onSubmit={handleAddProduct}
-          className="grid gap-4 rounded-2xl bg-gray-100 p-6 shadow-2xl max-h-[85vh] overflow-y-auto"
-        >
-          <h2 className="text-xl font-semibold">
-            Dodaj nowy produkt
-          </h2>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <input
-              type="text"
-              placeholder="Nazwa produktu"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="rounded-md border p-2"
-            />
-
-            <input
-              type="number"
-              step="0.01"
-              placeholder="Cena (opcjonalnie)"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="rounded-md border p-2"
-            />
-          </div>
-
-          <input
-            type="url"
-            placeholder="Link do sklepu (opcjonalnie)"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            className="rounded-md border p-2"
-          />
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <input
-              type="text"
-              placeholder="Kategoria (np. Elektronika, Ubrania)"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="rounded-md border p-2"
-            />
-
-            <textarea
-              placeholder="Opis / Notatki (opcjonalnie)"
-              maxLength={100}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="rounded-md border p-2"
-              rows="2"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-gray-500">
-                Dodaj z dysku:
-              </label>
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files[0])}
-                disabled={!!imageUrlInput}
-                className="rounded-md border p-1 text-sm bg-white file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-1.5 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-medium text-gray-500">
-                LUB wklej link do obrazka:
-              </label>
-
-              <input
-                type="url"
-                placeholder="https://..."
-                value={imageUrlInput}
-                onChange={(e) => setImageUrlInput(e.target.value)}
-                disabled={!!imageFile}
-                className="rounded-md border p-2 text-sm disabled:bg-gray-100 disabled:opacity-50"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-md bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50"
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            onClick={() => setIsOpen(false)}
           >
-            {isSubmitting ? "Dodawanie..." : "Dodaj produkt"}
-          </button>
-        </form>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 30, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl"
+            >
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="mb-2 ml-auto block"
+              >
+                <HiXMark className="text-gray-100 text-[40px] hover:text-red-400 transition-colors" />
+              </button>
+
+              <form
+                onSubmit={handleAddProduct}
+                className="grid gap-4 rounded-2xl bg-gray-100 p-6 shadow-2xl max-h-[85vh] overflow-y-auto"
+              >
+                <h2 className="text-xl font-semibold">
+                  Dodaj nowy produkt
+                </h2>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <input
+                    type="text"
+                    placeholder="Nazwa produktu"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="rounded-md border p-2"
+                  />
+
+                  <input
+                    type="number"
+                    step="0.01"
+                    placeholder="Cena (opcjonalnie)"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="rounded-md border p-2"
+                  />
+                </div>
+
+                <input
+                  type="url"
+                  placeholder="Link do sklepu (opcjonalnie)"
+                  value={link}
+                  onChange={(e) => setLink(e.target.value)}
+                  className="rounded-md border p-2"
+                />
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <input
+                    type="text"
+                    placeholder="Kategoria (np. Elektronika, Ubrania)"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="rounded-md border p-2"
+                  />
+
+                  <textarea
+                    placeholder="Opis / Notatki (opcjonalnie)"
+                    maxLength={100}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="rounded-md border p-2"
+                    rows="2"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-500">
+                      Dodaj z dysku:
+                    </label>
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setImageFile(e.target.files[0])}
+                      disabled={!!imageUrlInput}
+                      className="rounded-md border p-1 text-sm bg-white file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-1.5 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-500">
+                      LUB wklej link do obrazka:
+                    </label>
+
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      value={imageUrlInput}
+                      onChange={(e) => setImageUrlInput(e.target.value)}
+                      disabled={!!imageFile}
+                      className="rounded-md border p-2 text-sm disabled:bg-gray-100 disabled:opacity-50"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="rounded-md bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50"
+                >
+                  {isSubmitting ? "Dodawanie..." : "Dodaj produkt"}
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
 
