@@ -38,7 +38,6 @@ export default function Login() {
     }
   };
 
-  // Reszta kodu (interfejs) w kolejnym kroku...
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -55,7 +54,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 w-full rounded-md border border-blue-400 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
           
@@ -66,14 +65,14 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 w-full rounded-md border border-blue-400 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-full rounded-md bg-blue-400 py-2 text-white hover:bg-blue-300 transition-colors duration-300 disabled:opacity-50"
           >
             {isLoading ? 'Przetwarzanie...' : (isLogin ? 'Zaloguj' : 'Utwórz konto')}
           </button>

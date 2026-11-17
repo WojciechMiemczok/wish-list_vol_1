@@ -191,7 +191,7 @@ try {
 
                 <button 
                   onClick={() => setIsOpenMenu(true)}
-                  className='lg:text-6xl text-5xl mr-5'><IoMenu /></button>
+                  className='lg:text-6xl text-5xl mr-5 cursor-pointer'><IoMenu /></button>
 
 
                 {/* Kontener menu bocznego */}
@@ -209,7 +209,7 @@ try {
 
                         <button 
                         onClick={() => setIsOpenMenu(false)}
-                        className='text-black text-5xl hover:text-gray-200 transition-colors mt-3 ml-3'><HiXMark/></button>
+                        className='text-black text-5xl hover:text-gray-200 transition-colors mt-3 ml-3 cursor-pointer'><HiXMark/></button>
                         <div className=' h-full w-full flex flex-col items-center pt-10'>
 
 
@@ -222,9 +222,9 @@ try {
                                 value={shareEmailInput}
                                 onChange={(e) => setShareEmailInput(e.target.value)}
                                 required
-                                className="rounded border p-2 text-sm w-48"
+                                className="rounded border p-2 text-sm w-48 cursor-pointer"
                               />
-                              <button type="submit" className="rounded bg-blue-400 px-3 text-sm text-white hover:bg-blue-700">
+                              <button type="submit" className="rounded bg-blue-400 px-3 text-sm text-white hover:bg-blue-300 transition-colors duration-300 cursor-pointer">
                                 Daj dostęp
                               </button>
                             </form>
@@ -233,7 +233,7 @@ try {
                           <div className="flex h-[100px] items-center gap-3">
                             <label className="font-semibold text-blue-400">Widok listy:</label>
                             <select 
-                              className="focus:border-blue-300 rounded border-1 border-blue-400 p-2 text-sm shadow-sm"
+                              className="focus:border-blue-300 rounded border-1 border-blue-400 p-2 text-sm shadow-sm cursor-pointer"
                               value={currentViewId}
                               onChange={(e) => setCurrentViewId(e.target.value)}
                             >
@@ -294,7 +294,7 @@ try {
                 onClick={() => setIsOpen(false)}
                 className="mb-2 ml-auto block"
               >
-                <HiXMark className="text-gray-100 text-[40px] hover:text-red-400 transition-colors" />
+                <HiXMark className="text-gray-100 text-[40px] hover:text-[#ffffff30] transition-colors" />
               </button>
 
               <form
@@ -313,7 +313,7 @@ try {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="rounded-md border p-2"
+                    className="rounded-md border p-2 border-blue-400"
                   />
 
                   <input
@@ -322,7 +322,7 @@ try {
                     placeholder="Cena (opcjonalnie)"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="rounded-md border p-2"
+                    className="rounded-md border p-2 border-blue-400"
                   />
                 </div>
 
@@ -331,7 +331,7 @@ try {
                   placeholder="Link do sklepu (opcjonalnie)"
                   value={link}
                   onChange={(e) => setLink(e.target.value)}
-                  className="rounded-md border p-2"
+                  className="rounded-md border p-2 border-blue-400"
                 />
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -340,7 +340,7 @@ try {
                     placeholder="Kategoria (np. Elektronika, Ubrania)"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="rounded-md border p-2"
+                    className="rounded-md border p-2 border-blue-400"
                   />
 
                   <textarea
@@ -348,7 +348,7 @@ try {
                     maxLength={100}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="rounded-md border p-2"
+                    className="rounded-md border p-2 border-blue-400"
                     rows="2"
                   />
                 </div>
@@ -364,7 +364,7 @@ try {
                       accept="image/*"
                       onChange={(e) => setImageFile(e.target.files[0])}
                       disabled={!!imageUrlInput}
-                      className="rounded-md border p-1 text-sm bg-white file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-1.5 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+                      className="rounded-md border border-blue-400 p-1 text-sm bg-white file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 text-gray-500 file:px-4 file:py-1.5 file:text-sm file:font-semibold file:text-blue-400 hover:file:bg-blue-100 disabled:opacity-50"
                     />
                   </div>
 
@@ -379,7 +379,7 @@ try {
                       value={imageUrlInput}
                       onChange={(e) => setImageUrlInput(e.target.value)}
                       disabled={!!imageFile}
-                      className="rounded-md border p-2 text-sm disabled:bg-gray-100 disabled:opacity-50"
+                      className="rounded-md border p-2 text-sm disabled:bg-gray-100 disabled:opacity-50 border-blue-400"
                     />
                   </div>
                 </div>
@@ -387,7 +387,7 @@ try {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-md bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50"
+                  className="rounded-md bg-blue-400 py-2 font-semibold text-white hover:bg-blue-300 transition-colors duration-300 disabled:opacity-50"
                 >
                   {isSubmitting ? "Dodawanie..." : "Dodaj produkt"}
                 </button>
@@ -490,7 +490,7 @@ try {
 
             <button
               onClick={() => handleDeleteProduct(product.id)}
-              className="rounded text-sm lg:text-xl font-medium text-red-500 hover:text-red-400 transition-colors duration-300"
+              className="rounded text-sm lg:text-xl font-medium text-red-500 hover:text-red-400 cursor-pointer transition-colors duration-300"
             >
               Usuń
             </button>
