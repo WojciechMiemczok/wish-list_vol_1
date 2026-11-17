@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 import { HiXMark } from "react-icons/hi2";
 import { motion, AnimatePresence } from "motion/react";
 import { FaPlus } from "react-icons/fa";
+import { IoMenu } from "react-icons/io5";
+
 
 
 
@@ -21,12 +23,33 @@ export default function WishList({ session }) {
   const [imageFile, setImageFile] = useState(null);
   const [imageUrlInput, setImageUrlInput] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
+
+  // NOWE STANY DO WSPÓŁDZIELENIA:
+  const [currentViewId, setCurrentViewId] = useState(session.user.id); // ID osoby, której listę oglądamy (domyślnie nasze)
+  const [sharedWithMe, setSharedWithMe] = useState([]); // Listy znajomych
+  const [shareEmailInput, setShareEmailInput] = useState(''); // Pole wpisywania maila znajomego`
+
+ // Pobieranie list, które inni nam udostępnili
+  const fetchSharedLists = async () => {
+    const { data } = await supabase
+      .from('shared_access')
+      .select('owner_id, owner_email')
+      .eq('editor_email', session.user.email);
+    if (data) setSharedWithMe(data);
+  };
+
+  useEffect(() => {
+    fetchSharedLists();
+    fetchProducts();
+  }, [currentViewId]);
 
   const fetchProducts = async () => {
     setIsLoading(true);
     const { data, error } = await supabase
       .from('products')
       .select('*')
+      .eq('user_id', currentViewId)
       .order('created_at', { ascending: false }); // Sortowanie od najnowszych
 
     if (error) {
@@ -80,13 +103,13 @@ try {
     .from('products')
     .insert([
       {
-        user_id: session.user.id,
+        user_id: currentViewId,
         name,
         price: parseFloat(price) || 0,
         description,
         link,
         category,
-        image_url: finalImageUrl // Używamy zmiennej określonej wyżej
+        image_url: finalImageUrl 
       }
     ]);
 
@@ -101,7 +124,7 @@ try {
         setImageFile(null);
         setImageUrlInput(''); // Czyszczenie linku do zdjęcia
         
-        fetchProducts(); // Odświeżamy listę
+        fetchProducts(); // Odświeżanie listy
       
     } catch (error) {
       alert('Wystąpił błąd: ' + error.message);
@@ -129,6 +152,22 @@ try {
     }
   };
 
+  //nadawanie dostępu do listy
+  const handleGrantAccess = async (e) => {
+    e.preventDefault();
+    const { error } = await supabase.from('shared_access').insert([{
+      owner_id: session.user.id,
+      owner_email: session.user.email,
+      editor_email: shareEmailInput
+    }]);
+
+    if (error) alert('Błąd: ' + error.message);
+    else {
+      alert(`Udostępniono listę użytkownikowi ${shareEmailInput}!`);
+      setShareEmailInput('');
+    }
+  };
+
   return (
     
     <div className="min-h-screen bg-gradient-to-r md:p-8">
@@ -141,15 +180,86 @@ try {
 
       {/* Kontener całej aplikacji */}
       <div className="mx-auto max-w-7xl pt-[40px] lg:pt-[20px] lg:rounded-[30px] lg:mt-[10px] md:mt-0 p-0 md:p-6 shadow-[0_0_30px_rgba(0,0,0,0.2)]">
-        <div className="mb-8 flex ml-[15px] mr-[15px] md:ml-0 md:mr-0  items-center justify-between">
-          <h1 className="text-4xl lg:text-6xl font-bold text-gray-800">Moja Lista</h1>
-          <button
-            onClick={handleLogout}
-            className="rounded-[10px] bg-red-500 px-2 py-2 text-white hover:bg-red-400 transition-colors duration-300"
-          >
-            Wyloguj się
-          </button>
-        </div>
+        
+
+
+        
+            <div
+            className="mb-8 flex lg:relative   ml-[15px] mr-[15px] md:ml-0 md:mr-0  items-center justify-between">
+                <h1 className="text-4xl lg:text-6xl font-bold text-gray-800">Wish-List</h1>
+       
+
+                <button 
+                  onClick={() => setIsOpenMenu(true)}
+                  className='lg:text-6xl text-5xl mr-5'><IoMenu /></button>
+
+
+                {/* Kontener menu bocznego */}
+                  <AnimatePresence>
+                  {isOpenMenu && (
+                    <motion.div 
+                      key="modal"
+                      initial={{ scaleX: 0, opacity:0 }}
+                      animate={{ scaleX: 1, opacity:100 }}
+                      exit={{ scaleX: 0, opacity:0 }}
+                      style={{ transformOrigin: 'right center' }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className='bg-white z-50 absolute top-0 right-0 mt-8 lg:mt-0 w-[90%] lg:w-[600px] h-[700px] shadow-[0_0_20px_rgba(0,0,0,0.3)] rounded-2xl '>
+
+
+                        <button 
+                        onClick={() => setIsOpenMenu(false)}
+                        className='text-black text-5xl hover:text-gray-200 transition-colors mt-3 ml-3'><HiXMark/></button>
+                        <div className=' h-full w-full flex flex-col items-center pt-10'>
+
+
+                          {/* Dawanie uprawnień komuś innemu */}
+                          {currentViewId === session.user.id && (
+                            <form onSubmit={handleGrantAccess} className="flex gap-2">
+                              <input
+                                type="email"
+                                placeholder="E-mail znajomego..."
+                                value={shareEmailInput}
+                                onChange={(e) => setShareEmailInput(e.target.value)}
+                                required
+                                className="rounded border p-2 text-sm w-48"
+                              />
+                              <button type="submit" className="rounded bg-blue-400 px-3 text-sm text-white hover:bg-blue-700">
+                                Daj dostęp
+                              </button>
+                            </form>
+                          )}
+
+                          <div className="flex h-[100px] items-center gap-3">
+                            <label className="font-semibold text-blue-400">Widok listy:</label>
+                            <select 
+                              className="focus:border-blue-300 rounded border-1 border-blue-400 p-2 text-sm shadow-sm"
+                              value={currentViewId}
+                              onChange={(e) => setCurrentViewId(e.target.value)}
+                            >
+                              <option value={session.user.id}>Twoja lista</option>
+                              {sharedWithMe.map(list => (
+                                <option key={list.owner_id} value={list.owner_id}>
+                                   {list.owner_email}
+                                </option>
+                              ))}
+                            </select>
+                          </div>   
+
+                          <button
+                            onClick={handleLogout}
+                            className="rounded-[10px] bg-red-500 h-12 w-30 mt-auto mb-25 text-white hover:bg-red-400 transition-colors duration-300">
+                            Wyloguj się
+                          </button>
+
+
+                          
+                        </div>
+                    </motion.div>
+                )}
+                </AnimatePresence>
+                
+            </div>
         <div>
       {/* Przycisk otwierający */}
       <button className='hidden md:flex justify-center items-center bg-blue-400 w-[200px] text-white h-[50px] rounded-2xl text-[20px] mb-[20px] text-center hover:bg-blue-300 transition-colors duration-300' onClick={() => setIsOpen(true)}>
@@ -198,6 +308,7 @@ try {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <input
                     type="text"
+                    maxLength={40}
                     placeholder="Nazwa produktu"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
